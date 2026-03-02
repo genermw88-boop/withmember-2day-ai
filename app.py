@@ -20,8 +20,8 @@ st.markdown("매장의 리뷰 상태를 분석하고, 위드멤버 솔루션 적
 with st.form("review_analysis_form"):
     col1, col2 = st.columns(2)
     with col1:
-        place_name = st.text_input("매장명", placeholder="예: 콤마 봉천점")
-        category = st.text_input("업종/메뉴", placeholder="예: 삼겹살 전문점")
+        place_name = st.text_input("매장명", placeholder="예: 쌩굴쌩굴")
+        category = st.text_input("업종/메뉴", placeholder="예: 굴국밥 전문점")
     with col2:
         visit_reviews = st.number_input("현재 방문자 리뷰 수", min_value=0, step=1)
         blog_reviews = st.number_input("현재 블로그 리뷰 수", min_value=0, step=1)
@@ -36,8 +36,9 @@ if submitted:
         with st.spinner("AI가 지역 상권 데이터와 리뷰 평판을 분석 중입니다..."):
             
             prompt = f"""
-            너는 대한민국 최고의 소상공인 마케팅 전략가야. 아래 데이터를 바탕으로 사장님께 드리는 '리뷰 평판 진단 리포트'를 작성해.
-            모든 내용은 전문적이고 신뢰감 있는 톤으로 작성하며, HTML 태그나 특수기호 없이 오직 구분자(###)를 사용해서 답해.
+            너는 대한민국 최고의 소상공인 마케팅 전략가야.
+            아래 데이터를 바탕으로 사장님께 드리는 '리뷰 평판 진단 리포트'를 작성해.
+            HTML 태그를 적절히 사용해서 시각적으로 강조해줘. 오직 구분자(###)를 사용해서 답해.
 
             [입력 데이터]
             - 매장명: {place_name} ({category})
@@ -45,20 +46,29 @@ if submitted:
             - 블로그 리뷰: {blog_reviews}개
 
             ###VISIT_DIAG###
-            (방문자 리뷰 수에 대한 객관적 진단과 수치 부족 시 발생할 수 있는 신뢰도 저하 문제점을 2줄로 작성)
+            방문자 리뷰 수에 대한 객관적 진단과 문제점. 
+            (주의: 본문에 현재 리뷰 수를 언급할 때 반드시 <span style="color: red; font-weight: bold;">{visit_reviews}개</span> 로 작성해라)
+
+            ###VISIT_IMPROVE###
+            방문자 리뷰에 꾸준히 답글을 달았을 때 얻을 수 있는 개선점 및 기대효과 2줄
 
             ###AI_REPLY###
-            (사장님이 실제 사용할 수 있는 정중하고 감동적인 방문자 리뷰 답글 예시 2개를 작성. 하나는 감사 인사, 하나는 재방문 유도 중심)
+            사장님이 실제 사용할 수 있는 방문자 리뷰 답글 예시 2개. 
+            (주의: 1번 예시와 2번 예시 사이에 반드시 <br><br><br> 를 넣어 간격을 아주 넓게 띄워라)
 
             ###BLOG_DIAG###
-            (블로그 리뷰 데이터의 문제점 분석)
+            블로그 리뷰 데이터의 문제점 분석.
+            (주의: 본문에 현재 블로그 리뷰 수를 언급할 때 반드시 <span style="color: red; font-weight: bold;">{blog_reviews}개</span> 로 작성해라)
+
+            ###BLOG_IMPROVE###
+            블로그 리뷰 수가 증가하고 퀄리티가 높아졌을 때 얻을 수 있는 개선점 및 기대효과 2줄
 
             ###PROFIT_PREDICT###
-            (위드멤버의 10가지 올인원 솔루션 적용 시 3개월 후 예상 매출 상승 범위를 AI가 판단해서 강력하게 제시해. 
-            형식: "현재 대비 약 OO% ~ OO% 상승 예상")
+            위드멤버의 10가지 마케팅 솔루션 적용 시 3개월 후 예상 매출 상승 범위를 AI가 판단해서 제시. (예: "현재 대비 약 20% ~ 30% 상승 예상")
 
             ###CONCLUSION###
-            (위 마케팅 패키지가 사장님 매장에 필요한 이유를 강조하는 결론 1줄)
+            아래 문장을 베이스로 하되, 매장명({place_name}) 부분은 <span style="color: red; font-weight: bold;">{place_name}</span> 로 처리하고, 두 문장 사이에 <br>을 넣어 2줄로 출력해라.
+            출력 예시: 본 마케팅 패키지는 <span style="color: red; font-weight: bold;">{place_name}</span>의 낮은 온라인 인지도를 극복하고<br>압도적인 경쟁력을 확보하기 위한 필수적인 성공 전략입니다.
             """
 
             try:
@@ -73,9 +83,11 @@ if submitted:
                         return p.split(next_tag)[0].strip() if next_tag else p.strip()
                     except: return "데이터 분석 중..."
 
-                v_diag = cut("###VISIT_DIAG###", "###AI_REPLY###")
+                v_diag = cut("###VISIT_DIAG###", "###VISIT_IMPROVE###")
+                v_improve = cut("###VISIT_IMPROVE###", "###AI_REPLY###")
                 a_reply = cut("###AI_REPLY###", "###BLOG_DIAG###")
-                b_diag = cut("###BLOG_DIAG###", "###PROFIT_PREDICT###")
+                b_diag = cut("###BLOG_DIAG###", "###BLOG_IMPROVE###")
+                b_improve = cut("###BLOG_IMPROVE###", "###PROFIT_PREDICT###")
                 p_predict = cut("###PROFIT_PREDICT###", "###CONCLUSION###")
                 conclusion = cut("###CONCLUSION###")
 
@@ -89,6 +101,9 @@ if submitted:
                         .section-title {{ color: #1e3a8a; font-size: 18px; font-weight: 800; margin-bottom: 10px; }}
                         .ad-list {{ list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }}
                         .ad-list li {{ background: #ffffff; padding: 12px 15px; border-radius: 8px; color: #0369a1; font-weight: 700; font-size: 15px; border: 1px solid #bae6fd; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }}
+                        .improve-box {{ background: #f0fdf4; padding: 15px; border-radius: 8px; border: 1px dashed #4ade80; margin-top: 15px; margin-bottom: 30px; }}
+                        .improve-title {{ color: #166534; margin-top: 0; margin-bottom: 8px; font-size: 15px; font-weight: 800; }}
+                        .improve-text {{ color: #15803d; margin: 0; font-weight: 600; font-size: 14.5px; }}
                     </style>
                     <div id="report-card" style="width: 100%; max-width: 800px; padding: 50px 40px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 15px; box-shadow: 0px 10px 25px rgba(0,0,0,0.05);">
                         
@@ -106,23 +121,31 @@ if submitted:
                             </div>
                         </div>
 
-                        <div style="margin-bottom: 30px; border-left: 5px solid #3b82f6; padding-left: 15px;">
+                        <div style="border-left: 5px solid #3b82f6; padding-left: 15px;">
                             <h3 class="section-title">1. 방문자 리뷰 진단 및 문제점</h3>
-                            <p style="color: #334155;">{v_diag}</p>
+                            <div style="color: #334155;">{v_diag}</div>
+                        </div>
+                        <div class="improve-box">
+                            <h4 class="improve-title">✨ 꾸준한 답글 관리 시 개선점</h4>
+                            <div class="improve-text">{v_improve}</div>
                         </div>
 
-                        <div style="margin-bottom: 30px; background: #f1f5f9; padding: 20px; border-radius: 10px;">
-                            <h3 style="color: #0f172a; font-size: 16px; font-weight: 800; margin-top: 0; margin-bottom: 10px;">🤖 AI 추천 고객 감동 답글 예시</h3>
-                            <div style="color: #475569; font-weight: 500; white-space: pre-wrap;">{a_reply}</div>
+                        <div style="margin-bottom: 35px; background: #f1f5f9; padding: 25px; border-radius: 10px;">
+                            <h3 style="color: #0f172a; font-size: 16px; font-weight: 800; margin-top: 0; margin-bottom: 15px;">🤖 AI 추천 고객 감동 답글 예시</h3>
+                            <div style="color: #475569; font-weight: 500; font-size: 15px; line-height: 1.8;">{a_reply}</div>
                         </div>
 
-                        <div style="margin-bottom: 35px; border-left: 5px solid #10b981; padding-left: 15px;">
-                            <h3 style="color: #064e3b; font-size: 18px; font-weight: 800; margin-bottom: 10px;">2. 블로그 리뷰 분석</h3>
-                            <p style="color: #334155;">{b_diag}</p>
+                        <div style="border-left: 5px solid #10b981; padding-left: 15px;">
+                            <h3 style="color: #064e3b; font-size: 18px; font-weight: 800; margin-bottom: 10px;">2. 블로그 리뷰 분석 및 문제점</h3>
+                            <div style="color: #334155;">{b_diag}</div>
+                        </div>
+                        <div class="improve-box">
+                            <h4 class="improve-title" style="color: #065f46;">✨ 양질의 블로그 리뷰 증가 시 개선점</h4>
+                            <div class="improve-text" style="color: #065f46;">{b_improve}</div>
                         </div>
 
                         <div style="background: #e0f2fe; padding: 30px; border-radius: 15px; border: 2px solid #7dd3fc; margin-bottom: 30px;">
-                            <h3 style="color: #0284c7; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 20px; text-align: center;">💎 위드멤버 올인원 마케팅 솔루션</h3>
+                            <h3 style="color: #0284c7; font-size: 22px; font-weight: 900; margin-top: 0; margin-bottom: 20px; text-align: center;">💎 위드멤버 마케팅 솔루션 10가지</h3>
                             <ul class="ad-list">
                                 <li>1. 네이버 플레이스 세팅 및 관리 (SEO 최적화)</li>
                                 <li>2. 업체에 맞는 최적화 블로그 후보 검수 및 추천 리포트 제공</li>
@@ -137,12 +160,14 @@ if submitted:
                             </ul>
                         </div>
 
-                        <div style="background: #eff6ff; padding: 25px; border-radius: 10px; border: 1px solid #bfdbfe; text-align: center;">
+                        <div style="background: #eff6ff; padding: 30px; border-radius: 10px; border: 1px solid #bfdbfe; text-align: center;">
                             <h3 style="color: #1e40af; font-weight: 800; margin-top:0; margin-bottom: 15px;">🚀 솔루션 적용 시 3개월 후 예상 매출</h3>
-                            <div style="font-size: 26px; font-weight: 900; color: #2563eb;">{p_predict}</div>
+                            <div style="font-size: 28px; font-weight: 900; color: #2563eb; margin-bottom: 30px;">{p_predict}</div>
+                            
+                            <div style="font-size: 18px; font-weight: 800; color: #1e293b; line-height: 1.8; padding-top: 20px; border-top: 1px dashed #93c5fd;">
+                                "{conclusion}"
+                            </div>
                         </div>
-
-                        <p style="text-align: center; font-size: 18px; font-weight: 800; color: #1e293b; margin-top: 40px;">"{conclusion}"</p>
                     </div>
                     
                     <button onclick="downloadImage()" style="margin-top: 30px; padding: 15px 30px; font-size: 16px; font-weight: 800; color: #fff; background-color: #2b6cb0; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
@@ -166,7 +191,7 @@ if submitted:
                 }}
                 </script>
                 """
-                components.html(html_report, height=1600, scrolling=True)
+                components.html(html_report, height=2000, scrolling=True)
 
             except Exception as e:
                 st.error(f"분석 중 오류 발생: {e}")
