@@ -65,7 +65,8 @@ if submitted:
             블로그 리뷰 수가 증가하고 퀄리티가 높아졌을 때 얻을 수 있는 개선점 및 기대효과를 줄바꿈 없이 하나의 문단으로 꽉 차게 작성해.
 
             ###PROFIT_PREDICT###
-            위드멤버의 10가지 마케팅 솔루션 적용 시 3개월 후 예상 매출 상승 범위를 AI가 판단해서 제시. (예: "현재 대비 약 20% ~ 30% 상승 예상")
+            위드멤버의 10가지 마케팅 솔루션 적용 시 3개월 후 예상 매출 상승 범위를 현재 매장 상황에 맞게 AI가 진단해서 오직 "OO% ~ OO%" 형태의 퍼센트 수치만 출력해. (다른 설명 절대 금지)
+            출력 예시: 30% ~ 45%
 
             ###CONCLUSION###
             아래 문장을 베이스로 하되, 매장명({place_name}) 부분은 <span style="color: red; font-weight: bold;">{place_name}</span> 로 처리하고, 두 문장 사이에 <br>을 넣어 2줄로 출력해라.
@@ -82,7 +83,7 @@ if submitted:
                     try:
                         p = res.split(tag)[1]
                         return p.split(next_tag)[0].strip() if next_tag else p.strip()
-                    except: return "데이터 분석 중..."
+                    except: return "분석 중..."
 
                 v_diag = cut("###VISIT_DIAG###", "###VISIT_IMPROVE###")
                 v_improve = cut("###VISIT_IMPROVE###", "###AI_REPLY###")
@@ -92,7 +93,7 @@ if submitted:
                 p_predict = cut("###PROFIT_PREDICT###", "###CONCLUSION###")
                 conclusion = cut("###CONCLUSION###")
 
-                # 리포트 디자인 (여백 다이어트 및 줄간격 최적화)
+                # 리포트 디자인
                 html_report = f"""
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
                 <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; background-color: #f8fafc;">
@@ -163,7 +164,11 @@ if submitted:
 
                         <div style="background: #eff6ff; padding: 25px; border-radius: 10px; border: 1px solid #bfdbfe; text-align: center;">
                             <h3 style="color: #1e40af; font-weight: 800; margin-top:0; margin-bottom: 12px;">🚀 솔루션 적용 시 3개월 후 예상 매출</h3>
-                            <div style="font-size: 26px; font-weight: 900; color: #2563eb; margin-bottom: 25px;">{p_predict}</div>
+                            
+                            <div style="font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 25px; line-height: 1.5;">
+                                위드멤버의 10가지 마케팅 솔루션 적용 시 3개월 후<br>
+                                현재 대비 약 <span style="color: red; font-weight: 900; font-size: 28px;">{p_predict}</span> 상승 예상
+                            </div>
                             
                             <div style="font-size: 17px; font-weight: 800; color: #1e293b; line-height: 1.6; padding-top: 20px; border-top: 1px dashed #93c5fd;">
                                 {conclusion}
