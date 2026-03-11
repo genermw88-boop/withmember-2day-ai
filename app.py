@@ -93,7 +93,7 @@ if submitted:
                 p_predict = cut("###PROFIT_PREDICT###", "###CONCLUSION###")
                 conclusion = cut("###CONCLUSION###")
 
-                # 리포트 디자인
+                # 리포트 2장 분할 디자인
                 html_report = f"""
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
                 <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; background-color: #f8fafc;">
@@ -106,10 +106,13 @@ if submitted:
                         .improve-box {{ background: #f0fdf4; padding: 15px 20px; border-radius: 8px; border: 1px dashed #4ade80; margin-top: 10px; margin-bottom: 25px; }}
                         .improve-title {{ color: #166534; margin-top: 0; margin-bottom: 6px; font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 5px; }}
                         .improve-text {{ color: #15803d; margin: 0; font-weight: 500; font-size: 14.5px; }}
-                    </style>
-                    <div id="report-card" style="width: 100%; max-width: 800px; padding: 45px 40px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 15px; box-shadow: 0px 10px 25px rgba(0,0,0,0.05);">
                         
-                        <h1 style="text-align: center; color: #1e40af; font-size: 28px; font-weight: 900; margin-bottom: 5px;">📈 맞춤형 평판 진단 및 마케팅 제안서</h1>
+                        /* A4 용지 스타일의 카드 컨테이너 */
+                        .report-page {{ width: 100%; max-width: 800px; padding: 45px 40px; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 15px; box-shadow: 0px 10px 25px rgba(0,0,0,0.05); margin-bottom: 30px; }}
+                    </style>
+                    
+                    <div id="report-page-1" class="report-page">
+                        <h1 style="text-align: center; color: #1e40af; font-size: 28px; font-weight: 900; margin-bottom: 5px;">📈 맞춤형 평판 진단 리포트 (1/2)</h1>
                         <p style="text-align: center; color: #64748b; margin-bottom: 30px; font-size: 16px;">대상 매장: <strong style="color: #0f172a;">{place_name}</strong></p>
 
                         <div style="background: #fffbeb; border: 1px solid #fde68a; padding: 20px; border-radius: 12px; margin-bottom: 30px;">
@@ -141,9 +144,15 @@ if submitted:
                             <h3 style="color: #064e3b; font-size: 18px; font-weight: 800; margin-bottom: 8px;">2. 블로그 리뷰 분석 및 문제점</h3>
                             <div style="color: #334155; font-size: 15px;">{b_diag}</div>
                         </div>
-                        <div class="improve-box">
+                        <div class="improve-box" style="margin-bottom: 0;">
                             <h4 class="improve-title" style="color: #065f46;">✨ 양질의 블로그 리뷰 증가 시 개선점</h4>
                             <div class="improve-text" style="color: #065f46;">{b_improve}</div>
+                        </div>
+                    </div>
+                    <div id="report-page-2" class="report-page">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 30px;">
+                            <h2 style="color: #1e40af; font-size: 22px; font-weight: 900; margin: 0;">💡 마케팅 솔루션 제안서 (2/2)</h2>
+                            <p style="color: #64748b; font-size: 14px; margin: 0;">대상 매장: <strong style="color: #0f172a;">{place_name}</strong></p>
                         </div>
 
                         <div style="background: #e0f2fe; padding: 25px; border-radius: 15px; border: 2px solid #7dd3fc; margin-bottom: 30px;">
@@ -165,7 +174,7 @@ if submitted:
                         <div style="background: #eff6ff; padding: 25px; border-radius: 10px; border: 1px solid #bfdbfe; text-align: center;">
                             <h3 style="color: #1e40af; font-weight: 800; margin-top:0; margin-bottom: 12px;">🚀 솔루션 적용 시 3개월 후 예상 매출</h3>
                             
-                            <div style="font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 25px; line-height: 1.5;">
+                            <div style="font-size: 22px; font-weight: 800; color: #1e293b; margin-bottom: 25px; line-height: 1.5;">
                                 위드멤버의 10가지 마케팅 솔루션 적용 시 3개월 후<br>
                                 현재 대비 약 <span style="color: red; font-weight: 900; font-size: 28px;">{p_predict}</span> 상승 예상
                             </div>
@@ -175,29 +184,39 @@ if submitted:
                             </div>
                         </div>
                     </div>
-                    
-                    <button onclick="downloadImage()" style="margin-top: 30px; padding: 15px 30px; font-size: 16px; font-weight: 800; color: #fff; background-color: #2b6cb0; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                        📸 솔루션 제안서 이미지(.png) 다운로드
-                    </button>
+                    <div style="display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; justify-content: center;">
+                        <button onclick="downloadPage1()" style="padding: 15px 25px; font-size: 16px; font-weight: 800; color: #fff; background-color: #059669; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            📸 1. 진단 리포트 다운로드
+                        </button>
+                        <button onclick="downloadPage2()" style="padding: 15px 25px; font-size: 16px; font-weight: 800; color: #fff; background-color: #2563eb; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            📸 2. 마케팅 제안서 다운로드
+                        </button>
+                    </div>
                 </div>
                 
                 <script>
-                function downloadImage() {{
-                    const element = document.getElementById('report-card');
-                    html2canvas(element, {{
-                        scale: 2, 
-                        backgroundColor: "#ffffff",
-                        useCORS: true
-                    }}).then(canvas => {{
+                function downloadPage1() {{
+                    const element = document.getElementById('report-page-1');
+                    html2canvas(element, {{ scale: 2, backgroundColor: "#ffffff", useCORS: true }}).then(canvas => {{
                         let link = document.createElement('a');
-                        link.download = '{place_name}_마케팅제안서.png';
+                        link.download = '{place_name}_1_진단리포트.png';
+                        link.href = canvas.toDataURL();
+                        link.click();
+                    }});
+                }}
+                
+                function downloadPage2() {{
+                    const element = document.getElementById('report-page-2');
+                    html2canvas(element, {{ scale: 2, backgroundColor: "#ffffff", useCORS: true }}).then(canvas => {{
+                        let link = document.createElement('a');
+                        link.download = '{place_name}_2_솔루션제안서.png';
                         link.href = canvas.toDataURL();
                         link.click();
                     }});
                 }}
                 </script>
                 """
-                components.html(html_report, height=2000, scrolling=True)
+                components.html(html_report, height=2200, scrolling=True)
 
             except Exception as e:
                 st.error(f"분석 중 오류 발생: {e}")
