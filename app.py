@@ -93,7 +93,7 @@ if submitted:
                 p_predict = cut("###PROFIT_PREDICT###", "###CONCLUSION###")
                 conclusion = cut("###CONCLUSION###")
 
-                # 리포트 2장 분할 디자인
+                # 리포트 2장 분할 디자인 (가격표 추가)
                 html_report = f"""
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
                 <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; background-color: #f8fafc;">
@@ -169,7 +169,13 @@ if submitted:
                                 <li>9. 월 2회 기본 수정 (사진, 정보, 새소식)</li>
                                 <li>10. Google, 카카오맵 정보 유지 및 관리</li>
                             </ul>
-                        </div>
+                            
+                            <div style="margin-top: 20px; background-color: #ffffff; padding: 18px; border-radius: 10px; border: 2px dashed #38bdf8; text-align: center;">
+                                <span style="color: #94a3b8; font-size: 18px; font-weight: 600; text-decoration: line-through;">400만원(정상가)</span>
+                                <strong style="color: #e11d48; font-size: 24px; font-weight: 900; margin-left: 12px;">➔ 180만원</strong>
+                                <span style="color: #e11d48; font-size: 18px; font-weight: 700;"> (프로모션가)</span>
+                            </div>
+                            </div>
 
                         <div style="background: #eff6ff; padding: 25px; border-radius: 10px; border: 1px solid #bfdbfe; text-align: center;">
                             <h3 style="color: #1e40af; font-weight: 800; margin-top:0; margin-bottom: 12px;">🚀 솔루션 적용 시 3개월 후 예상 매출</h3>
