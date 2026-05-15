@@ -172,7 +172,7 @@ if submitted:
                             
                             <div style="margin-top: 20px; background-color: #ffffff; padding: 18px; border-radius: 10px; border: 2px dashed #38bdf8; text-align: center;">
                                 <span style="color: #94a3b8; font-size: 18px; font-weight: 600; text-decoration: line-through;">400만원(정상가)</span>
-                                <strong style="color: #e11d48; font-size: 24px; font-weight: 900; margin-left: 12px;">➔ 180만원</strong>
+                                <strong style="color: #e11d48; font-size: 24px; font-weight: 900; margin-left: 12px;">➔ 220만원</strong>
                                 <span style="color: #e11d48; font-size: 18px; font-weight: 700;"> (프로모션가)</span>
                             </div>
                             </div>
